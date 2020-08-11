@@ -24,13 +24,21 @@ describe("HeroesComponnent",()=>{
             //arrange
             mockHeroService.deleteHero.and.returnValue(of(true));
             component.heroes = HEROES;
-
             //act
             component.delete(HEROES[2]);
             //assert
             expect(component.heroes.length).toEqual(2);
-        })
+        });
 
+        it ("should call deleteHero",()=>{
+            //arrange
+            mockHeroService.deleteHero.and.returnValue(of(true));
+            component.heroes = HEROES;
+            //act
+            component.delete(HEROES[2]);
+            //assert
+            expect(mockHeroService.deleteHero).toHaveBeenCalledWith(HEROES[2]);
+        });
     });
 
 });
