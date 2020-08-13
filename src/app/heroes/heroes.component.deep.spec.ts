@@ -1,14 +1,24 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing"
 import { HeroesComponent } from "./heroes.component"
-import { NO_ERRORS_SCHEMA, Input, Component } from "@angular/core";
 import { HeroService } from "../hero.service";
 import { of } from "rxjs";
-import { Hero } from "../hero";
 import { By } from "@angular/platform-browser";
 import { HeroComponent } from "../hero/hero.component";
-import { forEach } from "@angular/router/src/utils/collection";
-import { by } from "protractor";
-import { findLocaleData } from "@angular/common/src/i18n/locale_data_api";
+import { Directive, Input, HostListener } from "@angular/core";
+
+//stub directive
+@Directive({
+    selector:'[routerLink]',//[] make it an attribute selector
+    host: {'(click)':'onclick()'} //The @HostListener decorator lets you subscribe to events of the DOM element that hosts an attribute directive
+})
+export class RouteDirectiveStub{
+    @Input('routerLink') linkParams: any;
+    navigatedTo: any = null;
+
+    onClick(){
+        this.navigatedTo = this.linkParams;
+    }
+}
 
 describe("heroesComponent (Deep Tests)",()=>{
     let fixture: ComponentFixture<HeroesComponent>;
@@ -26,14 +36,15 @@ describe("heroesComponent (Deep Tests)",()=>{
         TestBed.configureTestingModule({
             declarations:[
                 HeroesComponent,
-                HeroComponent
+                HeroComponent,
+                RouteDirectiveStub
             ],
             providers:[
                 {
                     provide: HeroService, useValue: mockHeroService
                 }
             ],
-            schemas:[NO_ERRORS_SCHEMA]
+            //schemas:[NO_ERRORS_SCHEMA]
         });
 
         fixture = TestBed.createComponent(HeroesComponent);
