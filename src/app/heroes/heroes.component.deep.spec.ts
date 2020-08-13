@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing"
-import { HeroesComponent } from "./heroes.component"
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { HeroesComponent } from "./heroes.component";
+import { NO_ERRORS_SCHEMA, Component, Input, Directive } from "@angular/core";
 import { HeroService } from "../hero.service";
 import { of } from "rxjs";
+import { Hero } from "../hero";
 import { By } from "@angular/platform-browser";
 import { HeroComponent } from "../hero/hero.component";
-import { Directive, Input, HostListener } from "@angular/core";
-
 //stub directive
 @Directive({
-    selector:'[routerLink]',//[] make it an attribute selector
-    host: {'(click)':'onclick()'} //The @HostListener decorator lets you subscribe to events of the DOM element that hosts an attribute directive
+  selector: '[routerLink]',//[] make it an attribute selector
+  host: { '(click)': 'onClick()' }  //The @HostListener decorator lets you subscribe to events of the DOM element that hosts an attribute directive
 })
-export class RouteDirectiveStub{
-    @Input('routerLink') linkParams: any;
-    navigatedTo: any = null;
+export class RouterLinkDirectiveStub {
+  @Input('routerLink') linkParams: any;
+  navigatedTo: any = null;
 
-    onClick(){
-        this.navigatedTo = this.linkParams;
-    }
+  onClick() {
+    this.navigatedTo = this.linkParams;
+  }
 }
 
 describe("heroesComponent (Deep Tests)",()=>{
@@ -37,7 +37,7 @@ describe("heroesComponent (Deep Tests)",()=>{
             declarations:[
                 HeroesComponent,
                 HeroComponent,
-                RouteDirectiveStub
+                RouterLinkDirectiveStub
             ],
             providers:[
                 {
@@ -118,5 +118,20 @@ describe("heroesComponent (Deep Tests)",()=>{
 
     });
 
+    it('should have the correct route for the first hero',()=>{
+        mockHeroService.getHeroes.and.returnValue(of(HEROES));
+           // run ngOnInit
+        fixture.detectChanges();
+
+        const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+
+        let routerLink = heroComponents[0]
+        .query(By.directive(RouterLinkDirectiveStub))
+        .injector.get(RouterLinkDirectiveStub);
+
+        heroComponents[0].query(By.css('a')).triggerEventHandler('click',null);
+
+        expect(routerLink.navigatedTo).toBe('/detail/1');
+    })
 
 })
