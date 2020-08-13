@@ -69,8 +69,11 @@ describe("heroesComponent (Deep Tests)",()=>{
     fixture.detectChanges();
 
     const heroesComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
-    heroesComponents[0].query(By.css('button'))
-        .triggerEventHandler('click', {stopPropagation:()=>{}});
+    //UI Click event
+    // heroesComponents[0].query(By.css('button'))
+    //     .triggerEventHandler('click', {stopPropagation:()=>{}});
+    //Raise Event with baseclass
+    (<HeroComponent>heroesComponents[0].componentInstance).delete.emit(undefined);
 
     expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
    });
