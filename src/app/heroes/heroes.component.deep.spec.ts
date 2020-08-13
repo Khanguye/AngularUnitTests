@@ -7,6 +7,8 @@ import { Hero } from "../hero";
 import { By } from "@angular/platform-browser";
 import { HeroComponent } from "../hero/hero.component";
 import { forEach } from "@angular/router/src/utils/collection";
+import { by } from "protractor";
+import { findLocaleData } from "@angular/common/src/i18n/locale_data_api";
 
 describe("heroesComponent (Deep Tests)",()=>{
     let fixture: ComponentFixture<HeroesComponent>;
@@ -54,5 +56,24 @@ describe("heroesComponent (Deep Tests)",()=>{
         for(let i=0;i< heroComps.length; i++){
             expect(heroComps[i].componentInstance.hero).toEqual(HEROES[i]);
         }
-   })
+   });
+
+   it(`Should call heroService.deleteHero 
+   when the Hero component's delete button is clicked`,()=>{
+
+    spyOn(fixture.componentInstance,'delete');
+
+    mockHeroService.getHeroes.and.returnValue(of(HEROES));
+        
+    // run ngOnInit
+    fixture.detectChanges();
+
+    const heroesComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+    heroesComponents[0].query(By.css('button'))
+        .triggerEventHandler('click', {stopPropagation:()=>{}});
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
+   });
+
+
 })
