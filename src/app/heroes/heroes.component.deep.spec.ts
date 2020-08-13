@@ -69,16 +69,43 @@ describe("heroesComponent (Deep Tests)",()=>{
     fixture.detectChanges();
 
     const heroesComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+    
     //UI Click event
     // heroesComponents[0].query(By.css('button'))
     //     .triggerEventHandler('click', {stopPropagation:()=>{}});
+    
     //Raise Event with Child Base Class
     //(<HeroComponent>heroesComponents[0].componentInstance).delete.emit(undefined);
+    
     //Raise Event on Children Directive
     heroesComponents[0].triggerEventHandler('delete',null);
 
     expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
    });
+
+   it('should add a new hero to the hero list when add button is clicked',()=>{
+
+    mockHeroService.getHeroes.and.returnValue(of(HEROES));
+   
+    // run ngOnInit
+    fixture.detectChanges();
+
+    const name = "Mr. Hero";
+    mockHeroService.addHero.and.returnValue(of({id:5,name: name,strength:4}));
+    //get the input and set Value
+    const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    inputElement.value = name;
+
+    const addButton = fixture.debugElement.queryAll(By.css('button'))[0];
+    addButton.triggerEventHandler('click',null);
+
+    fixture.detectChanges();
+
+    const heroText = fixture.debugElement.query(By.css('ul')).nativeElement.textContent;
+
+    expect(heroText).toContain(name);
+
+    });
 
 
 })
