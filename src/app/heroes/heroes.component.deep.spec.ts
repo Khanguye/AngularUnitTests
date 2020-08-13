@@ -72,8 +72,10 @@ describe("heroesComponent (Deep Tests)",()=>{
     //UI Click event
     // heroesComponents[0].query(By.css('button'))
     //     .triggerEventHandler('click', {stopPropagation:()=>{}});
-    //Raise Event with baseclass
-    (<HeroComponent>heroesComponents[0].componentInstance).delete.emit(undefined);
+    //Raise Event with Child Base Class
+    //(<HeroComponent>heroesComponents[0].componentInstance).delete.emit(undefined);
+    //Raise Event on Children Directive
+    heroesComponents[0].triggerEventHandler('delete',null);
 
     expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
    });
