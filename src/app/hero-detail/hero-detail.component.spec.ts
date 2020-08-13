@@ -42,25 +42,27 @@ describe('HeroDetailComponent',()=>{
 
         expect(fixture.nativeElement.querySelector('h2').textContent).toContain('SuperDude'.toUpperCase());
     });
-    // //parameter done to make sure the test is done with done() is called
-    // it('should call updateHero when save is called', fakeAsync( ()=>{
-    //     mockHeroService.updateHero.and.returnValue(of({}));
-    //     fixture.detectChanges();
-        
-    //     fixture.componentInstance.save();
-    //     flush();        
-       
-    //     expect(mockHeroService.updateHero).toHaveBeenCalled();
-    // }));
-
-    it('should call updateHero when save is called', async(() => {
+    
+    //Use this for both long run or Promise
+    //parameter done to make sure the test is done with done() is called
+    it('should call updateHero when save is called', fakeAsync( ()=>{
         mockHeroService.updateHero.and.returnValue(of({}));
         fixture.detectChanges();
-
+        
         fixture.componentInstance.save();
-
-        fixture.whenStable().then(() => {
+        flush();        
+       
         expect(mockHeroService.updateHero).toHaveBeenCalled();
-        });
-    }))
+    }));
+
+    // it('should call updateHero when save is called', async(() => {
+    //     mockHeroService.updateHero.and.returnValue(of({}));
+    //     fixture.detectChanges();
+
+    //     fixture.componentInstance.save();
+
+    //     fixture.whenStable().then(() => {
+    //     expect(mockHeroService.updateHero).toHaveBeenCalled();
+    //     });
+    // }))
 });
