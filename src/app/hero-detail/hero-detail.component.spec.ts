@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture } from "@angular/core/testing";
+import { TestBed, ComponentFixture, fakeAsync, flush } from "@angular/core/testing";
 import { HeroDetailComponent } from "./hero-detail.component";
 import { HeroService } from "../hero.service";
 import { ActivatedRoute } from "@angular/router";
@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { of } from "rxjs";
 import { FormsModule } from "@angular/forms";
 import { timeout } from "rxjs/operators";
+import { tick } from "@angular/core/src/render3";
 
 describe('HeroDetailComponent',()=>{
     let mockLocation, mockHeroService,mockActivatedRoute;
@@ -41,16 +42,14 @@ describe('HeroDetailComponent',()=>{
 
         expect(fixture.nativeElement.querySelector('h2').textContent).toContain('SuperDude'.toUpperCase());
     });
-
-    it('should call updateHero when save is called',(done)=>{
-
+    //parameter done to make sure the test is done with done() is called
+    it('should call updateHero when save is called', fakeAsync( ()=>{
         mockHeroService.updateHero.and.returnValue(of({}));
         fixture.detectChanges();
-
+        
         fixture.componentInstance.save();
-        setTimeout(()=>{
-             expect(mockHeroService.updateHero).toHaveBeenCalled();
-             done();
-        }, 300);
-    });
+        flush();        
+       
+        expect(mockHeroService.updateHero).toHaveBeenCalled();
+    }));
 });
